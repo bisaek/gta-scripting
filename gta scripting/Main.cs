@@ -14,7 +14,7 @@ namespace GtaScript
 {
     public class Main : Plugin
     {
-        private static readonly Interpreter interpreter = new Interpreter(new CalloutManager(), "main");
+        private static readonly Interpreter interpreter = new Interpreter(new CalloutManager());
 
 
         public override void Initialize()

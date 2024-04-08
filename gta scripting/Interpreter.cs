@@ -16,13 +16,11 @@ namespace GtaScript
         public readonly CalloutManager calloutManager;
         private readonly Environment globals = new Environment();
         private Environment environment;
-        public string mode;
 
 
-        public Interpreter(CalloutManager c, string mode)
+        public Interpreter(CalloutManager c)
         {
             calloutManager = c;
-            this.mode = mode;
             environment = globals;
 
             globals.define("print", new NativeFunctions.print());
@@ -38,11 +36,11 @@ namespace GtaScript
             }
         }
 
-        private void execute(Stmt stmt)
+        public void execute(Stmt stmt)
         {
             stmt.Accept(this);
         }
-        private object evaluate(Expr expr)
+        public object evaluate(Expr expr)
         {
             return expr.accept(this);
         }
@@ -79,22 +77,9 @@ namespace GtaScript
             if(callee is CalloutCallable)
             {
                 CalloutCallable function = (CalloutCallable)callee;
-                if(mode == "OnAccepted")
-                {
-                    return function.OnAccepted(this, calloutManager, arguments);
-                }
-                else if(mode == "Process")
-                {
-                    return function.Process(this, calloutManager, arguments);
-                }
-                else if(mode == "End")
-                {
-                    return function.End(this, calloutManager, arguments);
-                }
-                else
-                {
-                    return function.OnBefore(this, calloutManager, arguments);
-                }
+                calloutManager.createCalloutCallable(function);
+                return function.OnBefore(this, calloutManager, arguments);
+            
                 
             }
             else
@@ -107,10 +92,6 @@ namespace GtaScript
 
         public void visitStartStmt()
         {
-            if(mode == "OnBefore")
-            {
-                calloutManager.start();
-            }
             
 
         }
@@ -132,11 +113,12 @@ namespace GtaScript
 
         public void visitWhenStmt(Stmt.When stmt)
         {
-            if ((bool)evaluate(stmt.condition))
-            {
-                Game.LogTrivial("burde kun være bed y");
-                execute(stmt.thenBranch);
-            }
+            calloutManager.createWhen(stmt);
+            //if ((bool)evaluate(stmt.condition))
+            //{
+            //    Game.LogTrivial("burde kun være bed y");
+            //    execute(stmt.thenBranch);
+            //}
         }
     }
 }

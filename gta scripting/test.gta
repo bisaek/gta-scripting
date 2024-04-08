@@ -1,6 +1,13 @@
-﻿callout "dette er en test" {
+﻿callout "callout 1" {
 	when(isYPressed()) {
-		print("dette er en mega sej test men jeg tror ikke det virker")
+		print("dette er den første callout")
+	}
+	spawnSuspect()
+}
+
+callout "callout 2" {
+	when(isYPressed()) {
+		print("dette er den anden callout")
 	}
 	spawnSuspect()
 }

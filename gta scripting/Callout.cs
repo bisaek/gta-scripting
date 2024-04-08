@@ -10,8 +10,8 @@ namespace GtaScript
     {
         public Stmt stmt;
         public string CalloutMessage;
-        public readonly Dictionary<string, CalloutCallable> calloutCallables = new Dictionary<string, CalloutCallable>();
-        public readonly List<Stmt.When> whens = new List<Stmt.When>();
+        //public readonly List<CalloutCallable> calloutCallables = new List<CalloutCallable>();
+        //public readonly List<Stmt.When> whens = new List<Stmt.When>();
 
         public Callout(string CalloutMessage, Stmt stmt)
         {

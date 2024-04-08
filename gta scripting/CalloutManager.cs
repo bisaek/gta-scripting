@@ -18,6 +18,9 @@ namespace GtaScript
         private readonly Interpreter interpreter;
         public static int currentCallout = 0;
 
+        private readonly List<CalloutCallable> calloutCallables = new List<CalloutCallable>();
+        private readonly List<Stmt.When> whens = new List<Stmt.When>();
+
         public Ped suspect;
 
         public CalloutManager()
@@ -32,12 +35,12 @@ namespace GtaScript
 
         public void createWhen(Stmt.When when)
         {
-            callouts[currentCallout].whens.Add(when);
+            whens.Add(when);
         }
 
-        public void createCalloutCallable(string name, CalloutCallable calloutCallable)
+        public void createCalloutCallable(CalloutCallable calloutCallable)
         {
-            callouts[currentCallout].calloutCallables.Add(name, calloutCallable);
+            calloutCallables.Add(calloutCallable);
         }
 
 
@@ -60,16 +63,26 @@ namespace GtaScript
         }
         public override bool OnCalloutAccepted()
         {
-            interpreter.mode = "OnAccepted";
-            interpreter.intrepret(new List<Stmt>() { callouts[currentCallout].stmt });
+            foreach (CalloutCallable calloutCallable in calloutCallables)
+            {
+                calloutCallable.OnAccepted(interpreter, this);
+            }
             return base.OnCalloutAccepted();
         }
 
         public override void Process()
         {
-
-            interpreter.mode = "Process";
-            interpreter.intrepret(new List<Stmt>() { callouts[currentCallout].stmt });
+            foreach(CalloutCallable calloutCallable in calloutCallables)
+            {
+                calloutCallable.Process(interpreter, this);
+            }
+            foreach(Stmt.When when in whens)
+            {
+                if ((bool)interpreter.evaluate(when.condition))
+                {
+                    interpreter.execute(when.thenBranch);
+                }
+            }
             base.Process();
             //timer++;
             //wait();
@@ -83,8 +96,10 @@ namespace GtaScript
 
         public override void End()
         {
-            interpreter.mode = "End";
-            interpreter.intrepret(new List<Stmt>() { callouts[currentCallout].stmt });
+            foreach (CalloutCallable calloutCallable in calloutCallables)
+            {
+                calloutCallable.End(interpreter, this);
+            }
             base.End();
 
         }
