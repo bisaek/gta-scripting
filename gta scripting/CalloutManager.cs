@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Mod.API;
 using Rage;
+using System.Windows.Forms;
 
 
 
@@ -75,6 +76,10 @@ namespace GtaScript
 
         public override void Process()
         {
+            if (Game.IsKeyDown(Keys.End))
+            {
+                End();
+            }
             foreach(CalloutCallable calloutCallable in calloutCallables)
             {
                 calloutCallable.Process(interpreter, this);
