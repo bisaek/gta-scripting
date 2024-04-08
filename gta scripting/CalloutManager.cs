@@ -48,6 +48,9 @@ namespace GtaScript
 
         public override bool OnBeforeCalloutDisplayed()
         {
+            Random random = new Random();
+            currentCallout = random.Next(0, callouts.Count);
+
             //Game.LogTrivial(callouts[currentCallout].CalloutMessage);
             Vector3 spawnpoint;
 
