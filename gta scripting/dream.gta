@@ -1,0 +1,13 @@
+﻿callout "person med kniv" {
+	var suspect = spawnSuspect();
+	suspect.giveweapon("knife");
+
+	 when(suspect.distanceToPlayer <= 30){
+		suspect.attact(player);
+
+		when(keyPressed("Y")){
+			startpursuit();
+		}
+	 }
+	 
+}

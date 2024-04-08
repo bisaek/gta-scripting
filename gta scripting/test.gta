@@ -1,0 +1,6 @@
+﻿callout "dette er en test" {
+	when(isYPressed()) {
+		print("dette er en mega sej test men jeg tror ikke det virker")
+	}
+	spawnSuspect()
+}
