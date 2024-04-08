@@ -9,8 +9,8 @@ namespace GtaScript
     public interface CalloutCallable
     {
         object OnBefore(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments);
-        object OnAccepted(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments);
-        object Process(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments);
-        object End(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments);
+        object OnAccepted(Interpreter interpreter, CalloutManager calloutManager);
+        object Process(Interpreter interpreter, CalloutManager calloutManager);
+        object End(Interpreter interpreter, CalloutManager calloutManager);
     }
 }

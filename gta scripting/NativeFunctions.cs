@@ -55,7 +55,7 @@ namespace GtaScript
                 return null;
             }
 
-            public object OnAccepted(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
+            public object OnAccepted(Interpreter interpreter, CalloutManager calloutManager)
             {
                 calloutManager.suspect = new Ped(calloutManager.CalloutPosition);
                 suspectBlip = calloutManager.suspect.AttachBlip();
@@ -64,7 +64,7 @@ namespace GtaScript
                 return null;
             }
 
-            public object Process(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
+            public object Process(Interpreter interpreter, CalloutManager calloutManager)
             {
                 if (calloutManager.suspect.IsDead)
                 {
@@ -73,7 +73,7 @@ namespace GtaScript
                 return null;
             }
 
-            public object End(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
+            public object End(Interpreter interpreter, CalloutManager calloutManager)
             {
                 suspectBlip.Delete();
                 return null;
