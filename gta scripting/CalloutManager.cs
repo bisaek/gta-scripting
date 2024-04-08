@@ -22,7 +22,7 @@ namespace GtaScript
 
         public CalloutManager()
         {
-            interpreter = new Interpreter(this, "OnBefore");
+            interpreter = new Interpreter(this);
         }
 
         public void createNewCallout(string CalloutMessage, Stmt stmt)
@@ -30,12 +30,15 @@ namespace GtaScript
             callouts.Add(new Callout(CalloutMessage, stmt));
         }
 
-        public void createWhen(Stmt stmt)
+        public void createWhen(Stmt.When when)
         {
-
+            callouts[currentCallout].whens.Add(when);
         }
 
-
+        public void createCalloutCallable(string name, CalloutCallable calloutCallable)
+        {
+            callouts[currentCallout].calloutCallables.Add(name, calloutCallable);
+        }
 
 
 
