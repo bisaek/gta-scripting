@@ -12,18 +12,57 @@ namespace GtaScript
 
         public interface Visitor
         {
+            object visitBinaryExpr(Binary expr);
+            object visitGroupingExpr(Grouping expr);
             object visitLiteralExpr(Literal expr);
+            object visitUnaryExpr(Unary expr);
+
             object visitCallExpr(Call expr);
             object visitVariableExpr(Variable expr);
         }
 
         public abstract object accept(Visitor visitor);
 
-        
+        public class Binary : Expr
+        {
+            public Binary(Expr left, Token operator_, Expr right)
+            {
+                this.left = left;
+                this.operator_ = operator_;
+                this.right = right;
+            }
+
+            public override object accept(Visitor visitor)
+            {
+                return visitor.visitBinaryExpr(this);
+            }
+
+            public readonly Expr left;
+            public readonly Token operator_;
+            public readonly Expr right;
+        }
+
+        public class Grouping : Expr
+        {
+
+            public Grouping(Expr expression)
+            {
+                this.expression = expression;
+            }
+
+            public override object accept(Visitor visitor)
+            {
+                return visitor.visitGroupingExpr(this);
+            }
+
+            public readonly Expr expression;
+        }
+
+
         public class Literal : Expr
         {
 
-            public Literal(string body)
+            public Literal(object body)
             {
                 this.body = body;
             }
@@ -33,7 +72,25 @@ namespace GtaScript
                 return visitor.visitLiteralExpr(this);
             }
 
-            public readonly string body;
+            public readonly object body;
+        }
+
+        public class Unary : Expr
+        {
+
+            public Unary(Token operator_, Expr right)
+            {
+                this.operator_ = operator_;
+                this.right = right;
+            }
+
+            public override object accept(Visitor visitor)
+            {
+                return visitor.visitUnaryExpr(this);
+            }
+
+            public readonly Token operator_;
+            public readonly Expr right;
         }
 
         public class Call : Expr
