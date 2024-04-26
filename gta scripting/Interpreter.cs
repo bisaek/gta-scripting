@@ -26,6 +26,7 @@ namespace GtaScript
             globals.define("print", new NativeFunctions.print());
             globals.define("spawnSuspect", new NativeFunctions.spawnSuspect());
             globals.define("isYPressed", new NativeFunctions.isYPressed());
+            globals.define("getSuspectDistanceToPlayer", new NativeFunctions.getSuspectDistanceToPlayer());
         }
 
         public void intrepret(List<Stmt> statements)
@@ -44,6 +45,8 @@ namespace GtaScript
         {
             return expr.accept(this);
         }
+
+
 
         public void visitBlockStmt(Stmt.Block stmt)
         {
@@ -96,15 +99,92 @@ namespace GtaScript
 
         }
 
+        public object visitBinaryExpr(Expr.Binary expr)
+        {
+            object left = evaluate(expr.left);
+            object right = evaluate(expr.right);
+
+            switch (expr.operator_.type)
+            {
+                case TokenType.GREATER:
+                    return (double)left > (double)right;
+                case TokenType.GREATER_EQUAL:
+                    return (double)left >= (double)right;
+                case TokenType.LESS:
+                    return (double)left < (double)right;
+                case TokenType.LESS_EQUAL:
+                    return (double)left <= (double)right;
+                case TokenType.BANG_EQUAL:
+                    return !isEqual(left, right);
+                case TokenType.EQUAL_EQUAL:
+                    return isEqual(left, right);
+                case TokenType.MINUS:
+                    return (double)left - (double)right;
+                case TokenType.SLASH:
+                    return (double)left / (double)right;
+                case TokenType.STAR:
+                    return (double)left * (double)right;
+                case TokenType.PLUS:
+                    if(left is double && right is double)
+                    {
+                        return (double)left + (double)right;
+                    }
+
+                    if(left is string && right is string)
+                    {
+                        return (string)left + (string)right;
+                    }
+
+                    break;
+            }
+
+            return null;
+        }
+
         public object visitLiteralExpr(Expr.Literal expr)
         {
             return expr.body;
+        }
+
+        public object visitGroupingExpr(Expr.Grouping expr)
+        {
+            return evaluate(expr.expression);
+        }
+
+        public object visitUnaryExpr(Expr.Unary expr)
+        {
+            object right = evaluate(expr.right);
+
+            switch (expr.operator_.type)
+            {
+                case TokenType.BANG:
+                    return !isTruthy(right);
+                case TokenType.MINUS:
+                    return -(double)right;
+            }
+
+            return null;
+        }
+        private bool isTruthy(object o)
+        {
+            if (o == null) return false;
+            if (o is bool) return (bool)o;
+            return true;
+        }
+
+        private bool isEqual(object a, object b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null) return false;
+            return a.Equals(b);
         }
 
         public object visitVariableExpr(Expr.Variable expr)
         {
             return globals.get(expr.name);
         }
+
+        
 
         public void visitExpressionStmt(Stmt.Expression stmt)
         {

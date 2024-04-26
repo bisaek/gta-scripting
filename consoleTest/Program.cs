@@ -7,7 +7,7 @@ namespace consoleTest
 {
     class Program
     {
-        private static readonly Interpreter interpreter = new Interpreter(new CalloutManager(), "main");
+        private static readonly Interpreter interpreter = new Interpreter(new CalloutManager());
         static void Main(string[] args)
         {
             string textFile = @"C:\Users\Bruger\source\repos\gta scripting\gta scripting\test.gta";
@@ -19,7 +19,7 @@ namespace consoleTest
             List<Token> tokens = scanner.scanTokens();
             foreach(Token token in tokens)
             {
-                ///Console.WriteLine(token.toString());
+                //Console.WriteLine(token.toString());
             }
             
             Parser parser = new Parser(tokens);

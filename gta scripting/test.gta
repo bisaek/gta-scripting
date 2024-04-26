@@ -1,13 +1,13 @@
 ﻿callout "callout 1" {
-	when(isYPressed()) {
-		print("dette er den første callout")
+	when(getSuspectDistanceToPlayer()<30) {
+		print(getSuspectDistanceToPlayer())
 	}
 	spawnSuspect()
 }
 
 callout "callout 2" {
 	when(isYPressed()) {
-		print("dette er den anden callout")
+		print(1 > 2)
 	}
 	spawnSuspect()
 }

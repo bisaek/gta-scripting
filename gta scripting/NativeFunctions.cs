@@ -26,7 +26,7 @@ namespace GtaScript
             {
                if(arguments.Count == 1)
                 {
-                    Game.LogTrivial((string)arguments[0]);
+                    Game.LogTrivial(arguments[0].ToString());
                 }
                 
                 return null;
@@ -45,6 +45,33 @@ namespace GtaScript
                     return true;
                 }
                 return false;
+            }
+        }
+
+        public class getSuspectDistanceToPlayer : CalloutCallable
+        {
+            public int arity()
+            {
+                return 0;
+            }
+            public object OnBefore(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
+            {
+                return (double)Game.LocalPlayer.Character.DistanceTo(calloutManager.suspect);
+            }
+
+            object CalloutCallable.End(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
+            }
+
+            object CalloutCallable.OnAccepted(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
+            }
+
+            object CalloutCallable.Process(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
             }
         }
         public class spawnSuspect : CalloutCallable
