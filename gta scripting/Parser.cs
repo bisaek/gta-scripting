@@ -67,6 +67,74 @@ namespace GtaScript
 
         private Expr expression()
         {
+            return equality();
+        }
+
+        private Expr equality()
+        {
+            Expr expr = comparison();
+
+            while(match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL))
+            {
+                Token operator_ = previous();
+                Expr right = comparison();
+                expr = new Expr.Binary(expr, operator_, right);
+            }
+
+            return expr;
+        }
+
+        private Expr comparison()
+        {
+            Expr expr = term();
+
+            while (match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL))
+            {
+                Token operator_ = previous();
+                Expr right = term();
+                expr = new Expr.Binary(expr, operator_, right);
+            }
+
+            return expr;
+        }
+
+        private Expr term()
+        {
+            Expr expr = factor();
+
+            while (match(TokenType.MINUS, TokenType.PLUS))
+            {
+                Token operator_ = previous();
+                Expr right = factor();
+                expr = new Expr.Binary(expr, operator_, right);
+            }
+
+            return expr;
+        }
+
+        private Expr factor()
+        {
+            Expr expr = unary();
+
+            while(match(TokenType.SLASH, TokenType.STAR))
+            {
+                Token operator_ = previous();
+                Expr right = unary();
+                expr = new Expr.Binary(expr, operator_, right);
+            }
+
+            return expr;
+        }
+
+        private Expr unary()
+        {
+            if(match(TokenType.BANG, TokenType.MINUS))
+            {
+                Token operator_ = previous();
+                Expr right = unary();
+                return new Expr.Unary(operator_, right);
+            }
+
             return call();
         }
 
@@ -110,15 +178,27 @@ namespace GtaScript
         private Expr primary()
         {
 
-            
-            if (match(TokenType.STRING))
+            if (match(TokenType.FALSE)) return new Expr.Literal(false);
+            if (match(TokenType.TRUE)) return new Expr.Literal(true);
+            if (match(TokenType.NULL)) return new Expr.Literal(null);
+
+            if(match(TokenType.NUMBER, TokenType.STRING))
             {
                 return new Expr.Literal(previous().literal);
             }
+
             if (match(TokenType.IDENTIFIER))
             {
                 return new Expr.Variable(previous());
             }
+
+            if (match(TokenType.LEFT_PAREN))
+            {
+                Expr expr = expression();
+                advance();
+                return new Expr.Grouping(expr);
+            }
+            
 
             throw new Exception("syntax error");
 
