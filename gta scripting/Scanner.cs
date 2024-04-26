@@ -19,7 +19,10 @@ namespace GtaScript
         {
             {"callout", TokenType.CALLOUT },
             {"start", TokenType.START },
-            {"when", TokenType.WHEN }
+            {"when", TokenType.WHEN },
+            {"false", TokenType.FALSE },
+            {"true", TokenType.TRUE },
+            {"null", TokenType.NULL }
         };
 
         
@@ -52,13 +55,51 @@ namespace GtaScript
                 case ';': addToken(TokenType.SEMICOLON); break;
                 case ',': addToken(TokenType.COMMA); break;
                 case '"': String(); break;
+                case '-': addToken(TokenType.MINUS); break;
+                case '+': addToken(TokenType.PLUS); break;
+                case '!': addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
+                case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
+                case '<': addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
+                case '>': addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
+                case '/': addToken(TokenType.SLASH); break;
+                case '*': addToken(TokenType.STAR); break; 
                 default:
+                    if (isDigit(c))
+                    {
+                        number();
+                    }
                     if (isAlpha(c))
                     {
                         identifier();
                     }
                     break;
             }
+        }
+        private void number()
+        {
+            while (isDigit(peek())) advance();
+
+            if(peek() == '.' && isDigit(peekNext()))
+            {
+                advance();
+                while (isDigit(peek())) advance();
+            }
+
+            addToken(TokenType.NUMBER, Double.Parse(source.Substring(start, current - start)));
+        }
+
+        private char peekNext()
+        {
+            if (current + 1 >= source.Length) return '\0';
+            return source[current + 1];
+        }
+        private bool match(char expected)
+        {
+            if (isAtEnd()) return false;
+            if (source[current] != expected) return false;
+
+            current++;
+            return true;
         }
 
         private void String()
@@ -122,7 +163,7 @@ namespace GtaScript
             addToken(type, null);
         }
 
-        private void addToken(TokenType type, string literal)
+        private void addToken(TokenType type, object literal)
         {
             string text = source.Substring(start, current - start);
             tokens.Add(new Token(type, text, literal, line));
