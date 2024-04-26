@@ -17,9 +17,14 @@ namespace GtaScript
         LEFT_PAREN, RIGHT_PAREN,
         SEMICOLON,
         EOF,
-        STRING,
+        STRING, NUMBER,
         COMMA,
         WHEN,
+        BANG_EQUAL, EQUAL_EQUAL,
+        GREATER, GREATER_EQUAL, LESS, LESS_EQUAL,
+        BANG, EQUAL,
+        MINUS, PLUS, SLASH, STAR,
+        FALSE, TRUE, NULL
 
     }
 }
