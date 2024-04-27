@@ -27,6 +27,7 @@ namespace GtaScript
             globals.define("spawnSuspect", new NativeFunctions.spawnSuspect());
             globals.define("isYPressed", new NativeFunctions.isYPressed());
             globals.define("getSuspectDistanceToPlayer", new NativeFunctions.getSuspectDistanceToPlayer());
+            globals.define("startPursuit", new NativeFunctions.startPursuit());
         }
 
         public void intrepret(List<Stmt> statements)

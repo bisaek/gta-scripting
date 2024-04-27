@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
-
+using LSPD_First_Response.Mod.API;
 
 
 namespace GtaScript
@@ -57,6 +57,36 @@ namespace GtaScript
             public object OnBefore(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
             {
                 return (double)Game.LocalPlayer.Character.DistanceTo(calloutManager.suspect);
+            }
+
+            object CalloutCallable.End(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
+            }
+
+            object CalloutCallable.OnAccepted(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
+            }
+
+            object CalloutCallable.Process(Interpreter interpreter, CalloutManager calloutManager)
+            {
+                return null;
+            }
+        }
+        public class startPursuit : CalloutCallable
+        {
+            public int arity()
+            {
+                return 0;
+            }
+            public object OnBefore(Interpreter interpreter, CalloutManager calloutManager, List<object> arguments)
+            {
+
+                LHandle pursuit = Functions.CreatePursuit();
+                Functions.SetPursuitIsActiveForPlayer(pursuit, true);
+                Functions.AddPedToPursuit(pursuit, calloutManager.suspect);
+                return null;
             }
 
             object CalloutCallable.End(Interpreter interpreter, CalloutManager calloutManager)
