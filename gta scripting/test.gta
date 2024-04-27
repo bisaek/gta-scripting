@@ -1,6 +1,7 @@
 ﻿callout "callout 1" {
 	when(getSuspectDistanceToPlayer()<30) {
 		print(getSuspectDistanceToPlayer())
+		startPursuit()
 	}
 	spawnSuspect()
 }

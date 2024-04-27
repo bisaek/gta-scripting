@@ -20,7 +20,7 @@ namespace GtaScript
         public static int currentCallout = 0;
 
         private readonly List<CalloutCallable> calloutCallables = new List<CalloutCallable>();
-        private readonly List<Stmt.When> whens = new List<Stmt.When>();
+        private List<Tuple<Stmt.When, bool>> whens = new List<Tuple<Stmt.When, bool>>();
 
         public Ped suspect;
 
@@ -36,7 +36,7 @@ namespace GtaScript
 
         public void createWhen(Stmt.When when)
         {
-            whens.Add(when);
+            whens.Add(new Tuple<Stmt.When, bool>(when, false));
         }
 
         public void createCalloutCallable(CalloutCallable calloutCallable)
@@ -84,11 +84,12 @@ namespace GtaScript
             {
                 calloutCallable.Process(interpreter, this);
             }
-            foreach(Stmt.When when in whens)
+            for (int i = 0; i < whens.Count; i++)
             {
-                if ((bool)interpreter.evaluate(when.condition))
+                if ((bool)interpreter.evaluate(whens[i].Item1.condition) && !whens[i].Item2)
                 {
-                    interpreter.execute(when.thenBranch);
+                    interpreter.execute(whens[i].Item1.thenBranch);
+                    whens[i] = new Tuple<Stmt.When, bool>(whens[i].Item1, true);
                 }
             }
             base.Process();
